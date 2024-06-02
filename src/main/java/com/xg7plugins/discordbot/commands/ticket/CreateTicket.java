@@ -1,5 +1,6 @@
-package com.xg7plugins.discordbot.commands;
+package com.xg7plugins.discordbot.commands.ticket;
 
+import com.xg7plugins.discordbot.commands.Command;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -15,12 +16,7 @@ public class CreateTicket implements Command {
     }
     @Override
     public List<OptionData> getOptions() {
-        return Collections.singletonList(new OptionData(OptionType.STRING, "Assunto", "Digite o que você quer resolver", true));
-    }
-
-    @Override
-    public List<CommandData> getData() {
-        return List.of();
+        return Collections.singletonList(new OptionData(OptionType.STRING, "assunto", "Digite o que você quer resolver", true));
     }
 
     @Override
@@ -30,7 +26,6 @@ public class CreateTicket implements Command {
 
     @Override
     public void onSlashCommandEvent(SlashCommandInteractionEvent event) {
-        System.out.println("asdfsdfasdfsadfgsadfsdaf");
         event.reply("a").queue();
 
     }
