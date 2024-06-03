@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JDA jada = JDABuilder.createDefault("fasdasdfasdfMTE2Nzg5OTkyMDMzNDg2ODU0MA.GgI8Wg.zIih63PXKO_IVHi2xNHStc_oI5U20VejUHjJ9A")
+        JDA jada = JDABuilder.createDefault("dsaasdfafdsadsfafdsasdfsdfaMTE2Nzg5OTkyMDMzNDg2ODU0MA.GgI8Wg.zIih63PXKO_IVHi2xNHStc_oI5U20VejUHjJ9A")
                 .setActivity(Activity.watching("NADA"))
 
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
@@ -26,7 +26,6 @@ public class Main {
                 .build();
 
         jda = jada;
-        guild = jda.getGuildById("1206355714893815808");
 
     }
 }

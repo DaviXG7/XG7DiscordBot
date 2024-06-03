@@ -12,6 +12,7 @@ public class GuildReady extends ListenerAdapter {
     public void onGuildReady(GuildReadyEvent event) {
         if (event.getGuild().getIdLong() != 1206355714893815808L) return;
         CommandsManager.init(event.getGuild());
+        if (Main.guild == null) Main.guild = event.getGuild();
     }
 
 }

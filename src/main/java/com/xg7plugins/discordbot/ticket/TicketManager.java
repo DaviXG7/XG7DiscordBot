@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TicketManager {
-    List<Ticket> tickets = new ArrayList<Ticket>();
-    TextChannel channel;
+    private static List<Ticket> tickets = new ArrayList<Ticket>();
+    private static TextChannel channel;
 
-    public void setChannel(String id) {
-        this.channel = Main.guild.getTextChannelById(id);
+    public synchronized static void setChannel(String id) {
+        channel = Main.guild.getTextChannelById(id);
     }
 
     public synchronized static void addTicket(Ticket ticket) {

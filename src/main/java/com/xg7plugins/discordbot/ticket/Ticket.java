@@ -18,9 +18,12 @@ public class Ticket {
     private TextChannel ticketChannel;
     private List<Member> members;
     private int index;
+    private TipoTicket tipoTicket;
 
-    public Ticket(Member owner, int index) {
+    public Ticket(Member owner, int index, TipoTicket tipoTicket) {
         this.owner = owner;
+        this.tipoTicket = tipoTicket;
+        this.index = index;
         ticketChannel = Main.guild.createTextChannel("ticket-" + index)
                 .addPermissionOverride(Main.guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
                 .addMemberPermissionOverride(Long.parseLong(owner.getId()), EnumSet.of(Permission.VIEW_CHANNEL), null).complete();
