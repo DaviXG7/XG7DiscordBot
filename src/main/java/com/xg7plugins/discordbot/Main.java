@@ -2,6 +2,7 @@ package com.xg7plugins.discordbot;
 
 import com.xg7plugins.discordbot.commands.CommandsManager;
 import com.xg7plugins.discordbot.listeners.GuildReady;
+import com.xg7plugins.discordbot.listeners.MenuSelection;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -15,13 +16,13 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JDA jada = JDABuilder.createDefault("dsaasdfafdsadsfafdsasdfsdfaMTE2Nzg5OTkyMDMzNDg2ODU0MA.GgI8Wg.zIih63PXKO_IVHi2xNHStc_oI5U20VejUHjJ9A")
+        JDA jada = JDABuilder.createDefault("AAAASDdasdasdadaaMTE2Nzg5OTkyMDMzNDg2ODU0MA.GgI8Wg.zIih63PXKO_IVHi2xNHStc_oI5U20VejUHjJ9A")
                 .setActivity(Activity.watching("NADA"))
 
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
                 .enableIntents(GatewayIntent.GUILD_MESSAGES)
 
-                .addEventListeners(new GuildReady(), new CommandsManager())
+                .addEventListeners(new GuildReady(), new CommandsManager(), new MenuSelection())
 
                 .build();
 

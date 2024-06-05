@@ -24,7 +24,7 @@ public class Ticket {
         this.owner = owner;
         this.tipoTicket = tipoTicket;
         this.index = index;
-        ticketChannel = Main.guild.createTextChannel("ticket-" + index)
+        ticketChannel = Main.guild.getCategoryById("1247163361783840869").createTextChannel("ticket-" + index)
                 .addPermissionOverride(Main.guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
                 .addMemberPermissionOverride(Long.parseLong(owner.getId()), EnumSet.of(Permission.VIEW_CHANNEL), null).complete();
         members = new ArrayList<>();

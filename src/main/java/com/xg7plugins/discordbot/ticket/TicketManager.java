@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot.ticket;
 
 import com.xg7plugins.discordbot.Main;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ public class TicketManager {
         channel = Main.guild.getTextChannelById(id);
     }
 
-    public synchronized static void addTicket(Ticket ticket) {
-
+    public synchronized static void addTicket(Member owner, TipoTicket tipoTicket) {
+        tickets.add(new Ticket(owner, tickets.size(), tipoTicket));
     }
 }
