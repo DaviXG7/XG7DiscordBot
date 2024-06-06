@@ -12,7 +12,6 @@ public class MenuSelection extends ListenerAdapter {
         System.out.println(event.getComponentId());
         if (event.getComponentId().equals("menu:TipoDeTicket")) {
             String selected = event.getValues().get(0);
-            System.out.println("a");
 
             TicketManager.addTicket(event.getMember(), TipoTicket.valueOf(selected.toUpperCase()));
             event.reply("Ticket criado!").queue();
