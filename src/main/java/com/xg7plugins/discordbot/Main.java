@@ -16,7 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JDA jada = JDABuilder.createDefault("MSAASFJasfFJasfdFASIOdfMTE2Nzg5OTkyMDMzNDg2ODU0MA.GgI8Wg.zIih63PXKO_IVHi2xNHStc_oI5U20VejUHjJ9A")
+        JDA jada = JDABuilder.createDefault("MTE2Nzg5OTkyMDMzNDg2ODU0MA.GgI8Wg.zIih63PXKO_IVHi2xNHStc_oI5U20VejUHjJ9A")
                 .setActivity(Activity.watching("NADA"))
 
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
@@ -25,6 +25,8 @@ public class Main {
                 .addEventListeners(new GuildReady(), new CommandsManager(), new MenuSelection())
 
                 .build();
+
+        MainThread.start();
 
         jda = jada;
 

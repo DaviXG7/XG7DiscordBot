@@ -3,6 +3,7 @@ package com.xg7plugins.discordbot.commands.ticket;
 import com.xg7plugins.discordbot.commands.Command;
 import com.xg7plugins.discordbot.ticket.TicketManager;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
@@ -19,6 +20,11 @@ public class RequestChannel implements Command {
 
     @Override
     public void onSlashCommandEvent(SlashCommandInteractionEvent event) {
+
+        if (!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
+            event.reply("Você não tem permissão para usar este comando!").queue();
+            return;
+        }
 
         TicketManager.setChannel(event.getChannelId());
 

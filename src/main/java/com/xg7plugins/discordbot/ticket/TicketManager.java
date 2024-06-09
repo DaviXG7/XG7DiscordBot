@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot.ticket;
 
 import com.xg7plugins.discordbot.Main;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TicketManager {
+    @Getter
     private static List<Ticket> tickets = new ArrayList<Ticket>();
     private static TextChannel channel;
 
@@ -16,6 +18,10 @@ public class TicketManager {
     }
 
     public synchronized static void addTicket(Member owner, TipoTicket tipoTicket) {
-        tickets.add(new Ticket(owner, tickets.size(), tipoTicket));
+        tickets.add(new Ticket(owner, owner.getUser().getName(), tipoTicket));
+    }
+    public synchronized static void removeTicket(Ticket ticket) {
+        ticket.close();
+        tickets.remove(ticket);
     }
 }
