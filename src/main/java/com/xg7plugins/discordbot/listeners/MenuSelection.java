@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class MenuSelection extends ListenerAdapter {
     @Override
     public void onStringSelectInteraction(StringSelectInteractionEvent event) {
-        System.out.println(event.getComponentId());
         if (event.getComponentId().equals("menu:TipoDeTicket")) {
             String selected = event.getValues().get(0);
 
