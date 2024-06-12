@@ -17,7 +17,7 @@ public class MainThread {
                 TicketManager.getTickets().forEach(ticket -> {
 
                     if (ticket.getCreationTime() + 43200000 < System.currentTimeMillis()) {
-                        TicketManager.removeTicket(ticket);
+                        if (!ticket.isClosed())TicketManager.deleteTicket(ticket);
                     }
                 });
             }

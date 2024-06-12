@@ -26,7 +26,7 @@ public class CreateTicket implements Command {
 
     @Override
     public void onSlashCommandEvent(SlashCommandInteractionEvent event) {
-        event.reply("a").queue();
+        event.reply("a").setEphemeral(true).queue();
 
     }
 }
