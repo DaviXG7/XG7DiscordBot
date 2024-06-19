@@ -1,6 +1,8 @@
 package com.xg7plugins.discordbot.listeners;
 
 import com.xg7plugins.discordbot.Main;
+import com.xg7plugins.discordbot.data.SQLManager;
+import com.xg7plugins.discordbot.ticket.Ticket;
 import com.xg7plugins.discordbot.ticket.TicketManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -8,12 +10,16 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.requests.restaction.pagination.MessagePaginationAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 
 public class ButtonClick extends ListenerAdapter {
 
@@ -50,22 +56,34 @@ public class ButtonClick extends ListenerAdapter {
 
                 StringBuilder builder = new StringBuilder();
 
-                for (Message message : event.getChannel().getIterableHistory()) {
-                    builder.append("[");
-                    builder.append(message.getAuthor().getEffectiveName() + "\n");
-                    builder.append(message.getTimeCreated() + "\n");
-                    builder.append(message.getContentRaw() + "\n\n\n");
-                    builder.append("]");
+                List<Message> history = new java.util.ArrayList<>(event.getChannel().getIterableHistory().stream().toList());
+
+                Collections.reverse(history);
+
+                for (Message message : history) {
+                    builder.append(message.getAuthor().getEffectiveName()).append(" > ").append(message.getTimeCreated().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))).append(" -> ").append(message.getContentRaw()).append("\n");
                 }
 
-                try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-                    outputStream.write(builder.toString().getBytes(StandardCharsets.UTF_8));
+                TicketManager.getTickets().stream().filter(ticket -> ticket.getOwner().getIdLong() == event.getMember().getIdLong()).forEach(ticket -> {
+                    try {
+                        SQLManager.archiveTicket(builder.toString(), ticket);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
-                    ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+                byte[] bytes = builder.toString().getBytes(StandardCharsets.UTF_8);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+
+                EmbedBuilder builder1 = new EmbedBuilder();
+
+                builder1.setTitle("Ticket Arquivado!");
+                builder1.setColor(0x00FFFF);
+                builder1.setDescription("Ticket salvo no banco de dados. Aqui está a log:");
+
+
+                event.replyEmbeds(builder1.build()).setFiles(FileUpload.fromData(inputStream, "log.txt")).queue();
 
 
             }

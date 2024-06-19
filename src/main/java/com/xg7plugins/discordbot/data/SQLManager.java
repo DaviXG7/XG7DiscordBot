@@ -17,12 +17,13 @@ public class SQLManager {
 
     public static void load() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "root");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "");
         connection.setAutoCommit(true);
+        System.out.println(connection);
     }
 
     public static List<Ticket> getTickets() throws SQLException {
-        List<Ticket> tickets = new ArrayList<Ticket>();
+        List<Ticket> tickets = new ArrayList<>();
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM tickets");
         ResultSet resultSet = statement.executeQuery();
 
@@ -63,6 +64,15 @@ public class SQLManager {
                 users.executeUpdate();
             }
         }
+    }
+
+    public static void archiveTicket(String text, Ticket ticket) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO archvedtickets(owner,date,text) VALUES (?, ?, ?)");
+        statement.setLong(1, ticket.getOwner().getIdLong());
+        statement.setDate(2, new java.sql.Date(ticket.getCreationTime()));
+        statement.setString(3, text);
+        statement.executeUpdate();
+
     }
 
 

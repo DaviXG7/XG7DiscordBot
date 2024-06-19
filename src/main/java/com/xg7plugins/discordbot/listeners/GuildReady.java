@@ -31,7 +31,6 @@ public class GuildReady extends ListenerAdapter {
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
-        System.out.println(event.getGuild().getName());
         if (event.getGuild().getIdLong() != 1206355714893815808L) return;
         if (Main.guild == null) Main.guild = event.getGuild();
         CommandsManager.init(event.getGuild());
@@ -41,7 +40,7 @@ public class GuildReady extends ListenerAdapter {
             } catch (IOException | SQLException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-        });
+        }).start();
     }
 
 }
