@@ -25,7 +25,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JDA jada = JDABuilder.createDefault("MTE2Nzg5OTkyMDMzNDg2ODU0MA.GDlrTJ.WspzJ92NNbAN5CMOG5vpxRsUqoP7hAR4vYxDvs")
+        JDA jada = JDABuilder.createDefault("")
                 .setActivity(Activity.watching("NADA"))
 
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
