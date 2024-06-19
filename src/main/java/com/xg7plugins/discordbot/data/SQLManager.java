@@ -17,7 +17,7 @@ public class SQLManager {
 
     public static void load() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "root");
         connection.setAutoCommit(true);
     }
 

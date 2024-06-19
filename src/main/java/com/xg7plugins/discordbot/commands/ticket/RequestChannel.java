@@ -1,5 +1,6 @@
 package com.xg7plugins.discordbot.commands.ticket;
 
+import com.xg7plugins.discordbot.Main;
 import com.xg7plugins.discordbot.commands.Command;
 import com.xg7plugins.discordbot.ticket.TicketManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -37,7 +38,7 @@ public class RequestChannel implements Command {
         embedBuilder.addField("\uD83D\uDC68\u200D\uD83D\uDD27 Selecione um assunto", "• Reportar um bug\n • Tirar uma dúvida de um plugin\n• Denunciar um usuário \n• Outros problemas (Use para problemas moderados)", false);
         embedBuilder.addField("\uD83D\uDC68\u200D\uD83D\uDD27 Onde posso reportar um bug ou sugerir alguma coisa para um plugin?", "Para deixar um bug  para fazermos a manutenção do plugin vá em <#1206358490126487573> \n Para sugerir algum recurso para um plugin vá em <#1216708560587587615>", false);
 
-        embedBuilder.setFooter("Você pode abrir um ticket a cada 20 minutos e tickets desnecessários podem levar punição");
+        embedBuilder.setFooter("Tickets desnecessários podem levar punição", Main.guild.getIconUrl());
 
         StringSelectMenu.Builder builder = StringSelectMenu.create("menu:TipoDeTicket");
         builder.addOption("Bugs", "bugs");

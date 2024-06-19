@@ -25,20 +25,15 @@ public class TicketManager {
         tickets.add(new Ticket(owner, tipoTicket));
     }
     public synchronized static boolean containsUser(Member member) {
-        for (Ticket ticket : tickets) {
-            if (ticket.getOwner().getId().equals(member.getId())) {
-                return true;
-            }
-        }
-        return false;
+        return tickets.stream().anyMatch(ticket -> ticket.getOwner().getId().equals(member.getId()));
     }
     public synchronized static boolean closeTicket(Member owner, long id) {
         for (Ticket ticket : tickets) {
             if (ticket.getTicketChannel().getIdLong() == id) {
                 if (ticket.getOwner().getId().equals(owner.getId()) || owner.getPermissions().contains(Permission.ADMINISTRATOR)) {
-                    ticket.getTicketChannel().upsertPermissionOverride(owner).deny(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND).queue();
+                    ticket.getTicketChannel().upsertPermissionOverride(owner).deny(Permission.MESSAGE_SEND).queue();
                     ticket.getMembers().forEach(member -> {
-                        ticket.getTicketChannel().upsertPermissionOverride(member).deny(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND).queue();
+                        ticket.getTicketChannel().upsertPermissionOverride(member).deny(Permission.MESSAGE_SEND).queue();
                     });
                     return true;
                 }

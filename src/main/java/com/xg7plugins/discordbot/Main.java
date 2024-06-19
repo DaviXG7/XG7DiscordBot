@@ -25,7 +25,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        JDA jada = JDABuilder.createDefault("")
+        JDA jada = JDABuilder.createDefault("MTE2Nzg5OTkyMDMzNDg2ODU0MA.GLqPNP.nE513_guIz2YxFenkr1aw79P0qgX-ezphwD4T4")
                 .setActivity(Activity.watching("NADA"))
 
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
@@ -52,6 +52,7 @@ public class Main {
         try {
             SQLManager.setTickets(TicketManager.getTickets());
             JSONManager.save();
+            jda.shutdown();
         } catch (SQLException | IOException e) {
             throw new RuntimeException(e);
         }

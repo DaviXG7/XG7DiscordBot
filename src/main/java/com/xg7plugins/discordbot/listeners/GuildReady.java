@@ -17,7 +17,7 @@ import java.sql.SQLException;
 
 public class GuildReady extends ListenerAdapter {
 
-    void load(Guild guild) throws IOException, SQLException, ClassNotFoundException {
+    void load() throws IOException, SQLException, ClassNotFoundException {
 
         JSONManager.load();
         SQLManager.load();
@@ -31,14 +31,17 @@ public class GuildReady extends ListenerAdapter {
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
+        System.out.println(event.getGuild().getName());
         if (event.getGuild().getIdLong() != 1206355714893815808L) return;
-        CommandsManager.init(event.getGuild());
         if (Main.guild == null) Main.guild = event.getGuild();
-        try {
-            load(event.getGuild());
-        } catch (IOException | SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        CommandsManager.init(event.getGuild());
+        new Thread(() -> {
+            try {
+                load();
+            } catch (IOException | SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
 }

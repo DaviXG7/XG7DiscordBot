@@ -26,6 +26,7 @@ public class Ticket {
 
     public Ticket(Member owner, TipoTicket tipoTicket) {
         this.owner = owner;
+        System.out.println(Main.guild.getMemberById(owner.getIdLong()));
         this.tipoTicket = tipoTicket;
         this.creationTime = System.currentTimeMillis();
         this.ticketChannel = Main.guild.getCategoryById("1247163361783840869").createTextChannel("ticket-" + owner.getUser().getName())
@@ -35,7 +36,7 @@ public class Ticket {
 
         EmbedBuilder builder = new EmbedBuilder();
 
-        builder.setTitle("Ticket criado por: " + owner.getNickname());
+        builder.setTitle("Ticket criado por: " + owner.getEffectiveName());
         builder.setColor(0x00FFFF);
 
         builder.addField("Motivo: ", tipoTicket.getDescricao(), false);
@@ -54,6 +55,7 @@ public class Ticket {
     }
 
     public Ticket(long ownerid, long channelId, TipoTicket tipoTicket, long creationTime, List<Member> members) {
+
         this.owner = Main.guild.getMemberById(ownerid);
         this.ticketChannel = Main.guild.getTextChannelById(channelId);
         this.tipoTicket = tipoTicket;
