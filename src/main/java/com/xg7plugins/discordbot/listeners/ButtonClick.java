@@ -96,23 +96,6 @@ public class ButtonClick extends ListenerAdapter {
 
 
             }
-            case "addmem" -> {
-                TextInput input = TextInput.create("1", "a", TextInputStyle.PARAGRAPH).build();
-
-                List<Member> members = event.getGuild().getMembers();
-                StringSelectMenu.Builder menuBuilder = StringSelectMenu.create("select_member")
-                        .setPlaceholder("Selecione um membro")
-                        .setRequiredRange(1, 1); // Usuário deve selecionar exatamente um membro
-
-                for (Member member : members) {
-                    menuBuilder.addOption(member.getEffectiveName(), member.getId());
-                }
-
-                Modal modal = Modal.create(
-                        "1","a"
-                ).addActionRow(input).addActionRow(menuBuilder.build()).build();
-                event.replyModal(modal).queue();
-            }
         }
 
 }

@@ -1,15 +1,9 @@
 package com.xg7plugins.discordbot;
 
 import com.xg7plugins.discordbot.commands.CommandsManager;
-import com.xg7plugins.discordbot.data.JSONManager;
-import com.xg7plugins.discordbot.data.SQLManager;
 import com.xg7plugins.discordbot.listeners.ButtonClick;
-import com.xg7plugins.discordbot.listeners.CommandAutoComplete;
 import com.xg7plugins.discordbot.listeners.GuildReady;
 import com.xg7plugins.discordbot.listeners.MenuSelection;
-import com.xg7plugins.discordbot.ticket.Ticket;
-import com.xg7plugins.discordbot.ticket.TicketManager;
-import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -33,8 +27,7 @@ public class Main {
                         new GuildReady(),
                         new CommandsManager(),
                         new MenuSelection(),
-                        new ButtonClick(),
-                        new CommandAutoComplete()
+                        new ButtonClick()
                 )
 
 

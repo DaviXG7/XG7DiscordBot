@@ -31,14 +31,20 @@ public class RequestChannel implements Command {
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
 
-        embedBuilder.setTitle("Suporte :hammer:");
+        embedBuilder.setTitle("\uD83D\uDCE9 Abra um ticket");
+        embedBuilder.setDescription("Se você tiver dúvidas sobre como usar um plugin ou quiser reportar um bug, abra um ticket.");
         embedBuilder.setColor(0x00FFFF);
 
-        embedBuilder.addField("\uD83C\uDF9F️ Abra um ticket", "Abra um ticket se houver dúvidas sobre como usar um plugin ou para reportar um bug", false);
-        embedBuilder.addField("\uD83D\uDC68\u200D\uD83D\uDD27 Selecione um assunto", "• Reportar um bug\n • Tirar uma dúvida de um plugin\n• Denunciar um usuário \n• Outros problemas (Use para problemas moderados)", false);
-        embedBuilder.addField("\uD83D\uDC68\u200D\uD83D\uDD27 Onde posso reportar um bug ou sugerir alguma coisa para um plugin?", "Para deixar um bug  para fazermos a manutenção do plugin vá em <#1206358490126487573> \n Para sugerir algum recurso para um plugin vá em <#1216708560587587615>", false);
+        embedBuilder.addField("Selecione um assunto:", """
+                • \uD83D\uDC1E **Reportar um bug** \s
+                • ❓ **Tirar uma dúvida de um plugin** \s
+                • \uD83D\uDEA8 **Denunciar um usuário** \s
+                • ⚙\uFE0F **Outros problemas** (Use para problemas moderados)""", false);
 
-        embedBuilder.setFooter("Tickets desnecessários podem levar punição", Main.guild.getIconUrl());
+        embedBuilder.addField("Onde posso reportar um bug ou sugerir algo para um plugin?", "Para reportar um bug e ajudarmos na manutenção do plugin, vá em **<#1252029589413298226>**.  \n" +
+                "Para sugerir um recurso para um plugin, vá em **<#1252029623177318541>**.", false);
+
+        embedBuilder.setFooter("Nota: Você pode abrir um ticket a cada 20 minutos. Tickets desnecessários podem resultar em punição.", Main.guild.getIconUrl());
 
         StringSelectMenu.Builder builder = StringSelectMenu.create("menu:TipoDeTicket");
         builder.addOption("Bugs", "bugs");

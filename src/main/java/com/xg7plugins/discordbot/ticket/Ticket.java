@@ -77,6 +77,15 @@ public class Ticket {
             throw new RuntimeException(e);
         }
     }
+    public void removeMember(Member member) {
+        this.ticketChannel.upsertPermissionOverride(member).deny(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND).queue();
+        this.members.remove(member);
+        try {
+            SQLManager.removeTicketMember(member, this);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 

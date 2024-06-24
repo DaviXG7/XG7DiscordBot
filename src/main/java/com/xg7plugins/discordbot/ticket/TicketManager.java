@@ -40,6 +40,7 @@ public class TicketManager {
     }
     public synchronized static boolean closeTicket(Member owner, long id) {
         for (Ticket ticket : tickets) {
+            if (ticket == null) break;
             if (ticket.getTicketChannel().getIdLong() == id) {
                 if (!(ticket.getOwner().getId().equals(owner.getId()) || owner.getPermissions().contains(Permission.ADMINISTRATOR))) break;
                 ticket.getTicketChannel().upsertPermissionOverride(owner).deny(Permission.MESSAGE_SEND).queue();

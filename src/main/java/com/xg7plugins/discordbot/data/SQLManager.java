@@ -62,7 +62,12 @@ public class SQLManager {
         users.setLong(2, member.getIdLong());
         users.executeUpdate();
     }
-
+    public static void removeTicketMember(Member member, Ticket ticket) throws SQLException {
+        PreparedStatement users = connection.prepareStatement("DELETE FROM ticketmembers WHERE ticketid = ? AND memberid = ?");
+        users.setLong(1, ticket.getTicketChannel().getIdLong());
+        users.setLong(2, member.getIdLong());
+        users.executeUpdate();
+    }
     public static void addTicket(Ticket ticket) throws SQLException {
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO tickets(ownerid,channelid,tickettype,creationtime) VALUES (?, ?, ?, ?)");
