@@ -6,10 +6,15 @@ import com.xg7plugins.discordbot.ticket.Ticket;
 import com.xg7plugins.discordbot.ticket.TicketManager;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.requests.restaction.pagination.MessagePaginationAction;
 import net.dv8tion.jda.api.utils.FileUpload;
 
@@ -40,6 +45,10 @@ public class ButtonClick extends ListenerAdapter {
 
                 Button deletar = Button.danger("deletar", "Deletar ticket");
                 Button arquivar = Button.primary("arquivar", "Arquivar ticket");
+
+                deletar.withDisabled(!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR));
+                arquivar.withDisabled(!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR));
+
                 event.replyEmbeds(builder.build()).setActionRow(deletar, arquivar).queue();
             }
             case "deletar" -> {
@@ -86,6 +95,23 @@ public class ButtonClick extends ListenerAdapter {
                 event.replyEmbeds(builder1.build()).setFiles(FileUpload.fromData(inputStream, "log.txt")).queue();
 
 
+            }
+            case "addmem" -> {
+                TextInput input = TextInput.create("1", "a", TextInputStyle.PARAGRAPH).build();
+
+                List<Member> members = event.getGuild().getMembers();
+                StringSelectMenu.Builder menuBuilder = StringSelectMenu.create("select_member")
+                        .setPlaceholder("Selecione um membro")
+                        .setRequiredRange(1, 1); // Usuário deve selecionar exatamente um membro
+
+                for (Member member : members) {
+                    menuBuilder.addOption(member.getEffectiveName(), member.getId());
+                }
+
+                Modal modal = Modal.create(
+                        "1","a"
+                ).addActionRow(input).addActionRow(menuBuilder.build()).build();
+                event.replyModal(modal).queue();
             }
         }
 

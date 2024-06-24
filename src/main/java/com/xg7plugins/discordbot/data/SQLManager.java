@@ -17,9 +17,8 @@ public class SQLManager {
 
     public static void load() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "");
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "root");
         connection.setAutoCommit(true);
-        System.out.println(connection);
     }
 
     public static List<Ticket> getTickets() throws SQLException {
@@ -34,6 +33,8 @@ public class SQLManager {
             users.setString(1, resultSet.getString("channelid"));
             ResultSet usersResult = users.executeQuery();
 
+            System.out.println(resultSet.getLong("ownerid"));
+
             List<Member> members = new ArrayList<>();
 
             while (usersResult.next()) {
@@ -45,11 +46,25 @@ public class SQLManager {
 
         return tickets;
     }
-    public static void setTickets(List<Ticket> tickets) throws SQLException {
-        connection.prepareStatement("DELETE FROM ticketmembers").executeUpdate();
-        connection.prepareStatement("DELETE FROM tickets").executeUpdate();
 
-        for (Ticket ticket : tickets) {
+    public static void deleteTicket(Ticket ticket) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("DELETE FROM tickets WHERE channelid = ?");
+        statement.setLong(1, ticket.getTicketChannel().getIdLong());
+        statement.executeUpdate();
+
+        PreparedStatement users = connection.prepareStatement("DELETE FROM ticketmembers WHERE ticketid = ?");
+        users.setLong(1, ticket.getTicketChannel().getIdLong());
+        users.executeUpdate();
+    }
+    public static void addTicketMember(Member member, Ticket ticket) throws SQLException {
+        PreparedStatement users = connection.prepareStatement("INSERT INTO ticketmembers(ticketid, memberid) VALUES (?, ?)");
+        users.setLong(1, ticket.getTicketChannel().getIdLong());
+        users.setLong(2, member.getIdLong());
+        users.executeUpdate();
+    }
+
+    public static void addTicket(Ticket ticket) throws SQLException {
+
             PreparedStatement statement = connection.prepareStatement("INSERT INTO tickets(ownerid,channelid,tickettype,creationtime) VALUES (?, ?, ?, ?)");
             statement.setLong(1, ticket.getOwner().getIdLong());
             statement.setLong(2, ticket.getTicketChannel().getIdLong());
@@ -57,19 +72,12 @@ public class SQLManager {
             statement.setLong(4, ticket.getCreationTime());
             statement.executeUpdate();
 
-            for (Member member : ticket.getMembers()) {
-                PreparedStatement users = connection.prepareStatement("INSERT INTO ticketmembers(ticketid, memberid) VALUES (?, ?)");
-                users.setLong(1, ticket.getTicketChannel().getIdLong());
-                users.setLong(2, member.getIdLong());
-                users.executeUpdate();
-            }
-        }
     }
 
     public static void archiveTicket(String text, Ticket ticket) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO archvedtickets(owner,date,text) VALUES (?, ?, ?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO archivedtickets(owner,date,text) VALUES (?, ?, ?)");
         statement.setLong(1, ticket.getOwner().getIdLong());
-        statement.setDate(2, new java.sql.Date(ticket.getCreationTime()));
+        statement.setTimestamp(2, new java.sql.Timestamp(ticket.getCreationTime()));
         statement.setString(3, text);
         statement.executeUpdate();
 

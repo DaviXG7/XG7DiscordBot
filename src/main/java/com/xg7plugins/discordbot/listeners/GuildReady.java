@@ -25,6 +25,8 @@ public class GuildReady extends ListenerAdapter {
         TicketManager.setChannel(JSONManager.getDefaults().getLong("ticketChannelId"));
         TicketManager.setTickets(SQLManager.getTickets());
 
+
+
     }
 
 
@@ -34,6 +36,7 @@ public class GuildReady extends ListenerAdapter {
         if (event.getGuild().getIdLong() != 1206355714893815808L) return;
         if (Main.guild == null) Main.guild = event.getGuild();
         CommandsManager.init(event.getGuild());
+
         new Thread(() -> {
             try {
                 load();

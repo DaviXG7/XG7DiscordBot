@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot.ticket;
 
 import com.xg7plugins.discordbot.Main;
+import com.xg7plugins.discordbot.data.SQLManager;
 import lombok.Getter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -26,7 +28,6 @@ public class Ticket {
 
     public Ticket(Member owner, TipoTicket tipoTicket) {
         this.owner = owner;
-        System.out.println(Main.guild.getMemberById(owner.getIdLong()));
         this.tipoTicket = tipoTicket;
         this.creationTime = System.currentTimeMillis();
         this.ticketChannel = Main.guild.getCategoryById("1247163361783840869").createTextChannel("ticket-" + owner.getUser().getName())
@@ -46,17 +47,16 @@ public class Ticket {
         builder.setFooter("Aguarde ao atendimento", Main.guild.getIconUrl());
 
         Button fechar = Button.danger("fechar", "Fechar ticket");
-
         this.isClosed = false;
 
 
-        ticketChannel.sendMessageEmbeds(builder.build()).setActionRow(fechar).queue();
+        ticketChannel.sendMessage(owner.getAsMention()).addEmbeds(builder.build()).setActionRow(fechar).queue();
 
     }
 
     public Ticket(long ownerid, long channelId, TipoTicket tipoTicket, long creationTime, List<Member> members) {
 
-        this.owner = Main.guild.getMemberById(ownerid);
+        this.owner = Main.guild.retrieveMemberById(ownerid).complete();
         this.ticketChannel = Main.guild.getTextChannelById(channelId);
         this.tipoTicket = tipoTicket;
         this.creationTime = creationTime;
@@ -71,6 +71,11 @@ public class Ticket {
     public void addMember(Member member) {
         this.ticketChannel.upsertPermissionOverride(member).grant(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND).queue();
         this.members.add(member);
+        try {
+            SQLManager.addTicketMember(member, this);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

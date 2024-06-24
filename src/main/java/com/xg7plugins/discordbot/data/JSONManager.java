@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 public class JSONManager {
     @Getter
     private static JSONObject defaults;
-    private static final String path = "D:\\XG7Plugins\\XG7DiscordBot\\src\\main\\java\\com\\xg7plugins\\discordbot\\data\\defaults.json";
+    private static final String path = "C:\\Users\\davis\\Documents\\XG7Plugins\\PastaSite\\bot\\src\\main\\java\\com\\xg7plugins\\discordbot\\data\\defaults.json";
     public static void load() throws IOException {
         String string = new String(Files.readAllBytes(Paths.get(path)));
         defaults = new JSONObject(string);
