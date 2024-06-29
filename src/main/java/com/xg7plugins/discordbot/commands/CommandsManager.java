@@ -23,6 +23,7 @@ public class CommandsManager extends ListenerAdapter {
         commands.put(new RemoveUserOnTicket().getName(), new RemoveUserOnTicket());
         commands.put(new FecharTicket().getName(), new FecharTicket());
         commands.put(new RequestChannel().getName(), new RequestChannel());
+        commands.put(new ChatGPT().getName(), new ChatGPT());
 
         List<CommandData> data = commands.keySet().stream().map(k -> Commands.slash(k, commands.get(k).getDescription()).addOptions(commands.get(k).getOptions())).collect(Collectors.toList());
 

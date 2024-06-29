@@ -17,7 +17,7 @@ public class SQLManager {
 
     public static void load() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/discordbot", "root", "root");
+        connection = DriverManager.getConnection("jdbc:mysql://u148_XIs3okey1E:AaEd.GrXqfSw%40Lv!IrQN3!uS@170.231.121.12:3306/s148_discord");
         connection.setAutoCommit(true);
     }
 
@@ -33,15 +33,13 @@ public class SQLManager {
             users.setString(1, resultSet.getString("channelid"));
             ResultSet usersResult = users.executeQuery();
 
-            System.out.println(resultSet.getLong("ownerid"));
-
             List<Member> members = new ArrayList<>();
 
             while (usersResult.next()) {
-                members.add(Main.guild.getMemberById(usersResult.getLong("memberid")));
+                members.add(Main.guild.retrieveMemberById(usersResult.getLong("memberid")).complete());
             }
 
-            tickets.add(new Ticket(resultSet.getLong("ownerid"), resultSet.getLong("channelid"), TipoTicket.valueOf(resultSet.getString("tickettype")), resultSet.getLong("creationtime"), members));
+            tickets.add(new Ticket(resultSet.getLong("ownerid"), resultSet.getLong("channelid"), TipoTicket.valueOf(resultSet.getString("tickettype")), resultSet.getLong("creationtime"), members, resultSet.getBoolean("isclosed")));
         }
 
         return tickets;
@@ -70,11 +68,12 @@ public class SQLManager {
     }
     public static void addTicket(Ticket ticket) throws SQLException {
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO tickets(ownerid,channelid,tickettype,creationtime) VALUES (?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO tickets(ownerid,channelid,tickettype,creationtime,isclosed) VALUES (?, ?, ?, ?, ?)");
             statement.setLong(1, ticket.getOwner().getIdLong());
             statement.setLong(2, ticket.getTicketChannel().getIdLong());
             statement.setString(3, ticket.getTipoTicket().name());
             statement.setLong(4, ticket.getCreationTime());
+            statement.setBoolean(5, ticket.isClosed());
             statement.executeUpdate();
 
     }

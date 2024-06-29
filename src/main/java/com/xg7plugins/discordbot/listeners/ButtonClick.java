@@ -30,10 +30,16 @@ public class ButtonClick extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
+        if (event.getButton().isDisabled()) return;
         switch (event.getButton().getId()) {
             case "fechar" -> {
-                if (!TicketManager.closeTicket(event.getMember(), event.getChannelIdLong())) {
+                Ticket ticket = TicketManager.closeTicket(event.getMember(), event.getChannelIdLong());
+                if (ticket == null) {
                     event.reply("Você foi adicionado a este ticket, não pode fechá-lo!").setEphemeral(true).queue();
+                    return;
+                }
+                if (ticket.isClosed()) {
+                    event.reply("O ticket já está fechado!");
                     return;
                 }
                 EmbedBuilder builder = new EmbedBuilder();

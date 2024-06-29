@@ -5,6 +5,7 @@ import com.xg7plugins.discordbot.data.JSONManager;
 import com.xg7plugins.discordbot.data.SQLManager;
 import lombok.Getter;
 import lombok.Setter;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -38,7 +39,7 @@ public class TicketManager {
     public synchronized static boolean containsUser(Member member) {
         return tickets.stream().anyMatch(ticket -> ticket.getOwner().getId().equals(member.getId()));
     }
-    public synchronized static boolean closeTicket(Member owner, long id) {
+    public synchronized static Ticket closeTicket(Member owner, long id) {
         for (Ticket ticket : tickets) {
             if (ticket == null) break;
             if (ticket.getTicketChannel().getIdLong() == id) {
@@ -47,10 +48,20 @@ public class TicketManager {
                 ticket.getMembers().forEach(member -> {
                     ticket.getTicketChannel().upsertPermissionOverride(member).deny(Permission.MESSAGE_SEND).queue();
                 });
-                return true;
+                ticket.setClosed(true);
+
+                EmbedBuilder builder = new EmbedBuilder();
+
+                builder.setTitle("Como foi o nosso atendimento?");
+                builder.setDescription("Digite um número de 1-10");
+
+                ticket.getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
+                   privateChannel.sendMessageEmbeds(builder.build()).queue();
+                });
+                return ticket;
             }
         }
-        return false;
+        return null;
     }
     public synchronized static void deleteTicket(Ticket ticket) {
         ticket.close();

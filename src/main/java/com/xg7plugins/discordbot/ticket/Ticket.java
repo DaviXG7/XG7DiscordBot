@@ -3,18 +3,17 @@ package com.xg7plugins.discordbot.ticket;
 import com.xg7plugins.discordbot.Main;
 import com.xg7plugins.discordbot.data.SQLManager;
 import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import java.awt.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 public class Ticket {
@@ -24,6 +23,7 @@ public class Ticket {
     private List<Member> members;
     private TipoTicket tipoTicket;
     private long creationTime;
+    @Setter
     private boolean isClosed;
 
     public Ticket(Member owner, TipoTicket tipoTicket) {
@@ -32,7 +32,7 @@ public class Ticket {
         this.creationTime = System.currentTimeMillis();
         this.ticketChannel = Main.guild.getCategoryById("1247163361783840869").createTextChannel("ticket-" + owner.getUser().getName())
                 .addPermissionOverride(Main.guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
-                .addMemberPermissionOverride(Long.parseLong(owner.getId()), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND), null).complete();
+                .addMemberPermissionOverride(Long.parseLong(owner.getId()), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.USE_APPLICATION_COMMANDS), null).complete();
         this.members = new ArrayList<>();
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -54,13 +54,14 @@ public class Ticket {
 
     }
 
-    public Ticket(long ownerid, long channelId, TipoTicket tipoTicket, long creationTime, List<Member> members) {
+    public Ticket(long ownerid, long channelId, TipoTicket tipoTicket, long creationTime, List<Member> members, boolean isClosed) {
 
         this.owner = Main.guild.retrieveMemberById(ownerid).complete();
         this.ticketChannel = Main.guild.getTextChannelById(channelId);
         this.tipoTicket = tipoTicket;
         this.creationTime = creationTime;
         this.members = members;
+        this.isClosed = isClosed;
 
     }
 
