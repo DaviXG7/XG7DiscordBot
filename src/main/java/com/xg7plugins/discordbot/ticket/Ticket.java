@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot.ticket;
 
 import com.xg7plugins.discordbot.Main;
+import com.xg7plugins.discordbot.data.JSONManager;
 import com.xg7plugins.discordbot.data.SQLManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +43,7 @@ public class Ticket {
 
         builder.addField("Motivo: ", tipoTicket.getDescricao(), false);
 
-        builder.addField("O ticket fecha ", "<t:" + (creationTime + 43200000) / 1000 + ":R>", true);
+        builder.addField("O ticket fecha ", "<t:" + (creationTime + JSONManager.getDefaults().getLong("ticketcooldown")) / 1000 + ":R>", true);
 
         builder.setFooter("Aguarde ao atendimento", Main.guild.getIconUrl());
 
@@ -72,22 +73,12 @@ public class Ticket {
     public void addMember(Member member) {
         this.ticketChannel.upsertPermissionOverride(member).grant(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND).queue();
         this.members.add(member);
-        try {
-            SQLManager.addTicketMember(member, this);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        SQLManager.update("INSERT INTO ticketmembers(ticketid, memberid) VALUES (?, ?)", ticketChannel.getIdLong(), member.getIdLong());
     }
     public void removeMember(Member member) {
         this.ticketChannel.upsertPermissionOverride(member).deny(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND).queue();
         this.members.remove(member);
-        try {
-            SQLManager.removeTicketMember(member, this);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        SQLManager.update("DELETE FROM ticketmembers WHERE ticketid = ? AND memberid = ?", ticketChannel.getIdLong(), member.getIdLong());
     }
-
-
 
 }

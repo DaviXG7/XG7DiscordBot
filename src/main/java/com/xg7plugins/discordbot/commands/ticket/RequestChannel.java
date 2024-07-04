@@ -27,7 +27,7 @@ public class RequestChannel implements Command {
             return;
         }
 
-        TicketManager.setChannel(event.getIdLong());
+        TicketManager.setChannel(event.getChannelIdLong());
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
 

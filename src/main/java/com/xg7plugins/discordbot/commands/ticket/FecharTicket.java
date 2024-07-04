@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot.commands.ticket;
 
 import com.xg7plugins.discordbot.commands.Command;
+import com.xg7plugins.discordbot.commands.ticket.temp.DMTempManager;
 import com.xg7plugins.discordbot.ticket.Ticket;
 import com.xg7plugins.discordbot.ticket.TicketManager;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -46,6 +47,8 @@ public class FecharTicket implements Command {
 
             deletar.withDisabled(!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR));
             arquivar.withDisabled(!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR));
+
+            DMTempManager.addUser(ticket.getOwner().getUser());
 
             event.replyEmbeds(builder.build()).setActionRow(deletar, arquivar).queue();
 

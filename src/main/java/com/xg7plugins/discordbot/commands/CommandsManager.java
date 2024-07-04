@@ -1,5 +1,7 @@
 package com.xg7plugins.discordbot.commands;
 
+import com.xg7plugins.discordbot.commands.other.*;
+import com.xg7plugins.discordbot.commands.ticket.PutTicketTime;
 import com.xg7plugins.discordbot.commands.ticket.AddUserOnTicket;
 import com.xg7plugins.discordbot.commands.ticket.FecharTicket;
 import com.xg7plugins.discordbot.commands.ticket.RemoveUserOnTicket;
@@ -24,10 +26,16 @@ public class CommandsManager extends ListenerAdapter {
         commands.put(new FecharTicket().getName(), new FecharTicket());
         commands.put(new RequestChannel().getName(), new RequestChannel());
         commands.put(new ChatGPT().getName(), new ChatGPT());
+        commands.put(new PutTicketTime().getName(), new PutTicketTime());
+        commands.put(new Plugin().getName(), new Plugin());
+        commands.put(new Apoie().getName(), new Apoie());
+        commands.put(new Site().getName(), new Site());
+        commands.put(new MinePlayer().getName(), new MinePlayer());
 
         List<CommandData> data = commands.keySet().stream().map(k -> Commands.slash(k, commands.get(k).getDescription()).addOptions(commands.get(k).getOptions())).collect(Collectors.toList());
-
-
+        com.xg7plugins.discordbot.game.Commands gameCommands = new com.xg7plugins.discordbot.game.Commands();
+        data.add(Commands.slash(gameCommands.getName(), gameCommands.getDescription()).addSubcommands(gameCommands.getSubCommandData()));
+        commands.put(gameCommands.getName(), gameCommands);
         guild.updateCommands().addCommands(data).queue();
 
 

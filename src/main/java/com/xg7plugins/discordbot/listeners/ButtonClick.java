@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot.listeners;
 
 import com.xg7plugins.discordbot.Main;
+import com.xg7plugins.discordbot.commands.ticket.temp.DMTempManager;
 import com.xg7plugins.discordbot.data.SQLManager;
 import com.xg7plugins.discordbot.ticket.Ticket;
 import com.xg7plugins.discordbot.ticket.TicketManager;
@@ -33,13 +34,14 @@ public class ButtonClick extends ListenerAdapter {
         if (event.getButton().isDisabled()) return;
         switch (event.getButton().getId()) {
             case "fechar" -> {
-                Ticket ticket = TicketManager.closeTicket(event.getMember(), event.getChannelIdLong());
-                if (ticket == null) {
-                    event.reply("Você foi adicionado a este ticket, não pode fechá-lo!").setEphemeral(true).queue();
+
+                Ticket ticket = TicketManager.getTicketById(event.getChannelIdLong());
+                if (ticket.isClosed()) {
+                    event.reply("O ticket já está fechado!").queue();
                     return;
                 }
-                if (ticket.isClosed()) {
-                    event.reply("O ticket já está fechado!");
+                if (!TicketManager.closeTicket(event.getMember(), event.getChannelIdLong())) {
+                    event.reply("Você foi adicionado a este ticket, não pode fechá-lo!").setEphemeral(true).queue();
                     return;
                 }
                 EmbedBuilder builder = new EmbedBuilder();
@@ -54,6 +56,8 @@ public class ButtonClick extends ListenerAdapter {
 
                 deletar.withDisabled(!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR));
                 arquivar.withDisabled(!event.getMember().getPermissions().contains(Permission.ADMINISTRATOR));
+
+                DMTempManager.addUser(ticket.getOwner().getUser());
 
                 event.replyEmbeds(builder.build()).setActionRow(deletar, arquivar).queue();
             }
@@ -80,11 +84,11 @@ public class ButtonClick extends ListenerAdapter {
                 }
 
                 TicketManager.getTickets().stream().filter(ticket -> ticket.getOwner().getIdLong() == event.getMember().getIdLong()).forEach(ticket -> {
-                    try {
-                        SQLManager.archiveTicket(builder.toString(), ticket);
-                    } catch (SQLException e) {
-                        throw new RuntimeException(e);
-                    }
+                        SQLManager.update("INSERT INTO archivedtickets(owner,date,text) VALUES (?, ?, ?)",
+                                ticket.getOwner().getIdLong(),
+                                new java.sql.Timestamp(ticket.getCreationTime()),
+                                builder.toString()
+                        );
                 });
 
                 byte[] bytes = builder.toString().getBytes(StandardCharsets.UTF_8);
@@ -104,5 +108,6 @@ public class ButtonClick extends ListenerAdapter {
             }
         }
 
-}
+
+    }
 }

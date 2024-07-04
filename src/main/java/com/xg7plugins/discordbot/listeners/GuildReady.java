@@ -1,11 +1,14 @@
 package com.xg7plugins.discordbot.listeners;
 
 import com.xg7plugins.discordbot.Main;
+import com.xg7plugins.discordbot.commands.ticket.temp.DMTempManager;
 import com.xg7plugins.discordbot.data.JSONManager;
 import com.xg7plugins.discordbot.data.SQLManager;
 import com.xg7plugins.discordbot.commands.CommandsManager;
+import com.xg7plugins.discordbot.ticket.Ticket;
 import com.xg7plugins.discordbot.ticket.TicketManager;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
@@ -14,17 +17,35 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class GuildReady extends ListenerAdapter {
 
-    void load() throws IOException, SQLException, ClassNotFoundException {
-
-        JSONManager.load();
+    void load() throws IOException, SQLException, ClassNotFoundException, InterruptedException, ExecutionException {
         SQLManager.load();
 
-        TicketManager.setChannel(JSONManager.getDefaults().getLong("ticketChannelId"));
-        TicketManager.setTickets(SQLManager.getTickets());
+        Future<List<List<Object>>> tickets = SQLManager.select("SELECT * FROM tickets");
 
+        DMTempManager.load(new ArrayList<>());
+
+        JSONManager.load();
+        try {
+            TicketManager.setChannel(JSONManager.getDefaults().getLong("ticketChannelId"));
+        } catch (Exception ignored) {}
+
+        while (!tickets.isDone()) {
+            Thread.sleep(50);
+            System.out.println("Banco de dados carregando");
+        }
+        List<List<Object>> ticketsComplete = tickets.get();
+
+        for (List<Object> ticket : ticketsComplete) {
+            Future<List<List<Object>>> members = SQLManager.select("SELECT * FROM ticketmembers WHERE ticketid = ?");
+
+        }
 
 
     }
@@ -40,7 +61,7 @@ public class GuildReady extends ListenerAdapter {
         new Thread(() -> {
             try {
                 load();
-            } catch (IOException | SQLException | ClassNotFoundException e) {
+            } catch (IOException | SQLException | ClassNotFoundException | InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }).start();

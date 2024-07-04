@@ -17,7 +17,13 @@ public class MenuSelection extends ListenerAdapter {
                 return;
             }
 
+            if (TicketManager.containsCooldown(event.getMember().getIdLong())) {
+                event.reply("Você precisa esperar mais " + ((TicketManager.getCooldown(event.getMember()).getFirst() + 1200000 - System.currentTimeMillis()) / 60000) + " minutos para abrir um ticket novamente.").setEphemeral(true).queue();
+                return;
+            }
+
             TicketManager.addTicket(event.getMember(), TipoTicket.valueOf(selected.toUpperCase()));
+
             event.reply("Ticket criado!").setEphemeral(true).queue();
         }
     }

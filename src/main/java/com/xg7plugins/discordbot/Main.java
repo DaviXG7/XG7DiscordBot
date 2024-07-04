@@ -1,6 +1,7 @@
 package com.xg7plugins.discordbot;
 
 import com.xg7plugins.discordbot.commands.CommandsManager;
+import com.xg7plugins.discordbot.commands.ticket.temp.DMTempManager;
 import com.xg7plugins.discordbot.listeners.ButtonClick;
 import com.xg7plugins.discordbot.listeners.GuildReady;
 import com.xg7plugins.discordbot.listeners.MenuSelection;
@@ -16,7 +17,6 @@ public class Main {
     public static Guild guild;
 
     public static void main(String[] args) {
-
         JDA jada = JDABuilder.createDefault("")
                 .setActivity(Activity.watching("NADA"))
 
@@ -27,13 +27,15 @@ public class Main {
                         new GuildReady(),
                         new CommandsManager(),
                         new MenuSelection(),
-                        new ButtonClick()
+                        new ButtonClick(),
+                        new DMTempManager()
                 )
 
 
                 .build();
 
         MainThread.start();
+        MainThread.in().start();
 
         jda = jada;
 
