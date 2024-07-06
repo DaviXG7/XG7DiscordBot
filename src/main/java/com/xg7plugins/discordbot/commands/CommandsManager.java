@@ -33,9 +33,11 @@ public class CommandsManager extends ListenerAdapter {
         commands.put(new MinePlayer().getName(), new MinePlayer());
 
         List<CommandData> data = commands.keySet().stream().map(k -> Commands.slash(k, commands.get(k).getDescription()).addOptions(commands.get(k).getOptions())).collect(Collectors.toList());
+
         com.xg7plugins.discordbot.game.Commands gameCommands = new com.xg7plugins.discordbot.game.Commands();
         data.add(Commands.slash(gameCommands.getName(), gameCommands.getDescription()).addSubcommands(gameCommands.getSubCommandData()));
         commands.put(gameCommands.getName(), gameCommands);
+
         guild.updateCommands().addCommands(data).queue();
 
 

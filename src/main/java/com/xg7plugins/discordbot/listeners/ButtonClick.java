@@ -106,6 +106,12 @@ public class ButtonClick extends ListenerAdapter {
 
 
             }
+            case "modalgame" -> {
+                Modal modal = Modal.create("game", "Adicionar um membro")
+                        .addActionRow(TextInput.create("membro", "Digite o nome de usuário (não o apelido)", TextInputStyle.SHORT).build()).build();
+
+                event.replyModal(modal).queue();
+            }
         }
 
 

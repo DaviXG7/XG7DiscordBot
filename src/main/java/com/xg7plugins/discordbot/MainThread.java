@@ -54,6 +54,7 @@ public class MainThread {
                     case "stop" -> {
                         System.out.println("Parando o sistema...");
                         try {
+                            Main.guild.getCategoryById("1257913583896105071").getChannels().forEach(guildChannel -> guildChannel.delete().queue());
                             JSONManager.save();
                             SQLManager.close();
                         } catch (IOException | SQLException e) {

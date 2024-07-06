@@ -2,6 +2,7 @@ package com.xg7plugins.discordbot;
 
 import com.xg7plugins.discordbot.commands.CommandsManager;
 import com.xg7plugins.discordbot.commands.ticket.temp.DMTempManager;
+import com.xg7plugins.discordbot.game.Listener;
 import com.xg7plugins.discordbot.listeners.ButtonClick;
 import com.xg7plugins.discordbot.listeners.GuildReady;
 import com.xg7plugins.discordbot.listeners.MenuSelection;
@@ -20,15 +21,19 @@ public class Main {
         JDA jada = JDABuilder.createDefault("")
                 .setActivity(Activity.watching("NADA"))
 
-                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-                .enableIntents(GatewayIntent.GUILD_MESSAGES)
+                .enableIntents(
+                        GatewayIntent.MESSAGE_CONTENT,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_MEMBERS
+                )
 
                 .addEventListeners(
                         new GuildReady(),
                         new CommandsManager(),
                         new MenuSelection(),
                         new ButtonClick(),
-                        new DMTempManager()
+                        new DMTempManager(),
+                        new Listener()
                 )
 
 

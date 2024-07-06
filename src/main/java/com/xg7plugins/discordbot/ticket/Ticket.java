@@ -3,6 +3,7 @@ package com.xg7plugins.discordbot.ticket;
 import com.xg7plugins.discordbot.Main;
 import com.xg7plugins.discordbot.data.JSONManager;
 import com.xg7plugins.discordbot.data.SQLManager;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,11 +17,13 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+@AllArgsConstructor
 @Getter
 public class Ticket {
 
     private Member owner;
     private TextChannel ticketChannel;
+    @Setter
     private List<Member> members;
     private TipoTicket tipoTicket;
     private long creationTime;
@@ -43,7 +46,9 @@ public class Ticket {
 
         builder.addField("Motivo: ", tipoTicket.getDescricao(), false);
 
-        builder.addField("O ticket fecha ", "<t:" + (creationTime + JSONManager.getDefaults().getLong("ticketcooldown")) / 1000 + ":R>", true);
+        try {
+            builder.addField("O ticket fecha ", "<t:" + (creationTime + JSONManager.getDefaults().getLong("ticketcooldown")) / 1000 + ":R>", true);
+        } catch (Exception ignored) {}
 
         builder.setFooter("Aguarde ao atendimento", Main.guild.getIconUrl());
 
@@ -52,17 +57,6 @@ public class Ticket {
 
 
         ticketChannel.sendMessage(owner.getAsMention()).addEmbeds(builder.build()).setActionRow(fechar).queue();
-
-    }
-
-    public Ticket(long ownerid, long channelId, TipoTicket tipoTicket, long creationTime, List<Member> members, boolean isClosed) {
-
-        this.owner = Main.guild.retrieveMemberById(ownerid).complete();
-        this.ticketChannel = Main.guild.getTextChannelById(channelId);
-        this.tipoTicket = tipoTicket;
-        this.creationTime = creationTime;
-        this.members = members;
-        this.isClosed = isClosed;
 
     }
 
