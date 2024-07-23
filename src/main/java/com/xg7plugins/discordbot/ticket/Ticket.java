@@ -36,7 +36,7 @@ public class Ticket {
         this.creationTime = System.currentTimeMillis();
         this.ticketChannel = Main.guild.getCategoryById("1247163361783840869").createTextChannel("ticket-" + owner.getUser().getName())
                 .addPermissionOverride(Main.guild.getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL))
-                .addMemberPermissionOverride(Long.parseLong(owner.getId()), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.USE_APPLICATION_COMMANDS), null).complete();
+                .addMemberPermissionOverride(Long.parseLong(owner.getId()), EnumSet.of(Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND, Permission.USE_APPLICATION_COMMANDS, Permission.MESSAGE_ATTACH_FILES), null).complete();
         this.members = new ArrayList<>();
 
         EmbedBuilder builder = new EmbedBuilder();

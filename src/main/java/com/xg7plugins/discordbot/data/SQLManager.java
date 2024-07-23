@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,8 +19,23 @@ public class SQLManager {
 
     public static void load() throws SQLException, ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        connection = DriverManager.getConnection("");
+        connection = DriverManager.getConnection();
         connection.setAutoCommit(true);
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Statement stmt = connection.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT 1");
+                    if (rs.next()) System.out.println("Concecção com o banco de dados mantida");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 1800000);
+
         System.out.println("Banco de dados carregados com sucesso!");
     }
 

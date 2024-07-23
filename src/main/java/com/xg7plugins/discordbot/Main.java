@@ -19,7 +19,7 @@ public class Main {
 
     public static void main(String[] args) {
         JDA jada = JDABuilder.createDefault("")
-                .setActivity(Activity.watching("NADA"))
+                .setActivity(Activity.playing("XG7Plugins"))
 
                 .enableIntents(
                         GatewayIntent.MESSAGE_CONTENT,

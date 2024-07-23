@@ -3,6 +3,7 @@ package com.xg7plugins.discordbot.data;
 import lombok.Getter;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,10 +13,17 @@ import java.nio.file.Paths;
 public class JSONManager {
     @Getter
     private static JSONObject defaults;
-    private static final String path = JSONManager.class.getClassLoader().getResource("defaults.json").getPath().substring(1);
+    private static final String path = "/root/XG7DiscordBot/default.json";
     public static void load() throws IOException {
-        String string = new String(Files.readAllBytes(Paths.get(path)));
-        defaults = new JSONObject(string);
+        File file = new File(path);
+        if (!file.exists()) {
+            file.createNewFile();
+            FileWriter fw = new FileWriter(path);
+            fw.write("{}");
+            fw.flush();
+            fw.close();
+        }
+        defaults = new JSONObject(new String(Files.readAllBytes(Paths.get(path))));
         System.out.println("JSON carregado com sucesso!");
     }
     public static void setDefaults(String column, Object value) {

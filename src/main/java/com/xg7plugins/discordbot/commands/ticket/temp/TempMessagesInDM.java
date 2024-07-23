@@ -47,7 +47,7 @@ public class TempMessagesInDM {
             }
             case 2 -> {
                 if (points <= 4) {
-                    event.getChannel().sendMessage("Desculpe mas sua avaliação é menor que 5").queue();
+                    event.getChannel().sendMessage("Não podemos enviar esta avaliação pois ela é muito baixa. Por favor, se nós fizemos algo que te fez mal, fale conosco novamente que resolveremos o problema.").queue();
                     return;
                 }
                 if (response.toLowerCase().equals("sim")) {
@@ -66,7 +66,14 @@ public class TempMessagesInDM {
                 event.getChannel().sendMessage("Tente de novo, digite \"sim\" ou \"não\"").queue();
             }
             case 3 -> {
-                Main.guild.getTextChannelById(1256799583577575464L).sendMessage("## Usuário " + event.getAuthor().getName() + " fez uma avaliação\n" + response).queue();
+
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setColor(0xffff00);
+                builder.setTitle("Usuário " + event.getAuthor().getName() + " fez uma avaliação do atendimento!");
+                builder.addField("Nota (0/10):", points + "", false);
+                builder.addField("Avaliação:", response, false);
+
+                Main.guild.getTextChannelById(1256799583577575464L).sendMessageEmbeds(builder.build()).queue();
                 event.getChannel().sendMessage("Obrigado por nos avaliar!").queue();
                 SQLManager.delete("DELETE FROM dmrate WHERE userid = ?", this.user.getId());
             }

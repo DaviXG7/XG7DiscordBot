@@ -137,6 +137,7 @@ public class Commands implements Command {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            event.reply("Canal do jogo colocado com sucesso!").setEphemeral(true).queue();
         }
 
         @Override
